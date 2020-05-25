@@ -8,6 +8,7 @@
 # --------------------------------------------------
 import requests
 from bs4 import BeautifulSoup
+from EventClass import Concert
 
 
 def get_widget_content(page_soup):
@@ -52,6 +53,34 @@ def get_concert_list():
                 for item in list_items:
                     link = item.findAll('a', href=True)
                     if len(link) != 0:
-                        concert_list.append(link[0]['href'])
+                        concert_list.append("https://www.afisha.ru" + link[0]['href'])
 
     return concert_list
+
+
+available_meta_formats = ["json", "xml"]
+
+
+def get_concert_meta(concert_link, meta_format="json"):
+    """ Build xml structure with concert metadata
+
+    :param concert_link: (string) link to a concert page
+    :param meta_format: (string) data output format: json, xml
+    :return: (string xml) concert metadata in xml
+    """
+    if meta_format not in available_meta_formats:
+        return f"{meta_format} is an unknown data format"
+
+    # Set up concert object
+    concert = Concert()
+    concert.set_event_link(concert_link)
+
+    # Prepare concert page soup
+    page_request = requests.get(concert_link)
+    page_soup = BeautifulSoup(page_request.text, 'lxml')
+
+    concert.parse_page_soup(page_soup)
+    if meta_format == "json":
+        return concert.to_json()
+    elif meta_format == "xml":
+        return concert.to_xml()
