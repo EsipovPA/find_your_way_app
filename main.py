@@ -6,11 +6,14 @@
 # email: esipov.p@mail.ru
 # --------------------------------------------------
 from ScanConsert import get_concert_list, get_concert_meta
+from SqliteInterface import upload_json
+from Config import Config
 
 
-concert_list = get_concert_list()
-
+# Get concert metadata
+concert_list = get_concert_list(pages_limit=1)
 first_concert_meta = get_concert_meta(concert_link=concert_list[0], meta_format="json")
 
-print(f"concert meta json:\n{first_concert_meta}")
+upload_json(first_concert_meta, Config().get_table_name(table_type="raw_data"))
+
 print("I'm done")

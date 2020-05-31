@@ -20,9 +20,10 @@ def get_widget_content(page_soup):
     return page_soup.select(".OW6DD")       # Look at website and check if does not work
 
 
-def get_concert_list():
+def get_concert_list(pages_limit=None):
     """ Gets list of concerts for afisha moscow website
 
+    :param pages_limit: (int) limit of concert list pages to scan. Initially - None
     :return: (string list) list of concert links
     """
     concert_list = []
@@ -47,13 +48,16 @@ def get_concert_list():
         list_widget = page_soup.select('.content')
         if len(list_widget) != 0:
             list_items = list_widget[0].select('.new-list__item-info')
-            print(f"page counter = {page_counter}")
+            print(f"pages scanned = {page_counter}")
             if len(list_items) != 0:
                 links_list = []
                 for item in list_items:
                     link = item.findAll('a', href=True)
                     if len(link) != 0:
                         concert_list.append("https://www.afisha.ru" + link[0]['href'])
+
+            if pages_limit is not None and pages_limit == page_counter:
+                break
 
     return concert_list
 

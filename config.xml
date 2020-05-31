@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<configuration>
+    <database>
+        <type>sqlite</type>
+        <db_name>fyw_db.db</db_name>
+        <tables>
+            <item name="artist">
+                <table_name>artist</table_name>
+                <columns>
+                    <item>artist_id</item>
+                    <item>target_id</item>
+                    <item>name</item>
+                </columns>
+            </item>
+            <item name="description">
+                <table_name>description</table_name>
+                <columns>
+                    <item>target_id</item>
+                    <item>description</item>
+                </columns>
+            </item>
+            <item name="event">
+                <table_name>event</table_name>
+                <columns>
+                    <item>id</item>
+                    <item>name</item>
+                </columns>
+            </item>
+            <item name="location">
+                <table_name>location</table_name>
+                <columns>
+                    <item>event_id</item>
+                    <item>longitude</item>
+                    <item>latitude</item>
+                    <item>address</item>
+                </columns>
+            </item>
+            <item name="tag">
+                <table_name>tag</table_name>
+                <columns>
+                    <item>target_id</item>
+                    <item>tag</item>
+                </columns>
+            </item>
+        </tables>
+    </database>
+</configuration>
