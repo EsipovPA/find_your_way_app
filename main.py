@@ -14,6 +14,6 @@ from Config import Config
 concert_list = get_concert_list(pages_limit=1)
 first_concert_meta = get_concert_meta(concert_link=concert_list[0], meta_format="json")
 
-upload_json(first_concert_meta, Config().get_table_name(table_type="raw_data"))
+upload_json(first_concert_meta)
 
 print("I'm done")
