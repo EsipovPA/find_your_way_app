@@ -17,55 +17,32 @@ import pandas as pd
 import sqlite3
 import json
 from Config import Config
-from EventClass import Event
+from EventClass import Concert
 
 
-def upload_event(event):
-    """ Upload event structure
+def upload_concert(concert):
+    """ Upload concert structure
 
-    :param event: Event class object, or one of it's subclasses
+    :param concert: Event class object, or one of it's subclasses
     :return:
     """
-
-
-    return None
-
-
-def upload_json(json_str):
-    """ Upload json structure
-
-    :param json_str: (json) input data in json formatted string
-    :param db_table: (string) table to upload the data
-    :return: None
-    """
-    print("\nIn the upload_json")
+    print("In the upload_event")
 
     try:
         conn = sqlite3.connect(Config().get_database_name())
         cursor = conn.cursor()
-        input_data = json.loads(json_str)
 
-        event_id = get_event_id(input_data['name'], cursor)
+        event_id = get_event_id(concert.name, cursor)
         if event_id is None:
-            print(f"Create new event: {input_data['name']}")
+            event_id = insert_new_event(conn, event_name=concert.name)
 
-        # update event data is other tables
-        print(f"artists = {input_data['artists'][0]}")
+        for artist in concert.artists:
+            update_artist_data(conn, artist, event_id)
     except sqlite3.Error as e:
         print(f"  database connection error: {e}")
     finally:
         conn.close()
 
-    print("End of the upload_json\n")
-    return None
-
-
-def upload_xml(xml_str):
-    """
-
-    :param xml_str: (string) input data in xml formatted string
-    :return:
-    """
     return None
 
 
@@ -78,24 +55,77 @@ def get_event_id(event_name, cursor):
     """
     cursor.execute(f"SELECT * FROM event WHERE "
                    f"{Config().get_table_columns_list(table_type='event')[1]}=\"{event_name}\"")
-    return cursor.fetchone()[0]
+    if cursor.fetchone() is None:
+        return None
+    else:
+        return cursor.fetchone()[0]
 
 
-def update_artist_data(cursor, artist_name, event_name):
+def update_artist_data(connection, artist_name, event_id):
     """ If artist does not appear in database, create new artist record.
     Set connection between artist and event
 
-    :param cursor: sqlite cursor
+    :param connection: sqlite connection object
     :param artist_name: (string) name of the artist
-    :param event_name: (string) name of the event, that the artist participates
+    :param event_id: (int) event identifier in the database
     :return: None
     """
-    print(f"select * from {Config().get_table_name('artist')}"
-                   f"where {Config().get_table_columns_list('artist')[2]}=\"{artist_name}\"")
-    cursor.execute(f"select * from {Config().get_table_name('artist')}"
-                   f"where {Config().get_table_columns_list('artist')[2]}=\"{artist_name}\"")
-    print(f"size of the request result = {len(cursor.fetchall())}")
+    cursor = connection.cursor()
+    cursor.execute(f"select * from {Config().get_table_name('artist')} "
+                   f"where {Config().get_table_columns_list('artist')[2]} = {artist_name}")
+
+    artist_record = cursor.fetchone()
+    if artist_record is None:
+        cursor.execute(f"insert into {Config().get_table_name('artist')} "
+                       f"({', '.join(Config().get_table_columns_list('artist'))}) "
+                       f"values ({', '.join([new_artist_id(connection), artist_name])})")
+        connection.commit()
+
+    # TODO: Update artist - event relation table
+    # cursor.execute(f"select * from {Config().get_table_name('event_artist')} "
+    #                f"where")
+
+    connection.commit()
     return None
+
+
+def new_artist_id(connection):
+    """ generate new artist id
+
+    :param connection: sqlite connection object
+    :return: new artist id
+    """
+    cursor = connection.cursor()
+    cursor.execute(f"select * from {Config().get_table_name('artist')} order by id desc limit 1")
+    last_artist_rec = cursor.fetchone()
+    if last_artist_rec is None:
+        return 1
+    else:
+        return last_artist_rec[0] + 1
+
+
+def insert_new_event(conn, event_name):
+    """ 1) Generate new event ID
+    2) insert event data into table 'event'
+
+    :param conn: sqlite connection
+    :param event_name: (string) name of the event
+    :return: (int) new event identifier
+    """
+    event_name = f'"{event_name}"'
+    cursor = conn.cursor()
+    cursor.execute(f"select * from {Config().get_table_name('event')}"
+                   f" order by {Config().get_table_columns_list('event')[0]} desc limit 1")
+    last_event = cursor.fetchone()
+    if last_event is not None:
+        new_event_id = last_event[0] + 1
+        cursor.execute(f"insert into {Config().get_table_name('event')} "
+                       f"({', '.join(Config().get_table_columns_list('event'))}) "
+                       f"values ({', '.join([str(new_event_id), event_name])})")
+    else:
+        new_event_id = 1
+    conn.commit()
+    return new_event_id
 
 
 def update_genre_data(cursor, genre_name, event_name):

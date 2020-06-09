@@ -8,7 +8,6 @@
                 <table_name>artist</table_name>
                 <columns>
                     <item>artist_id</item>
-                    <item>target_id</item>
                     <item>name</item>
                 </columns>
             </item>

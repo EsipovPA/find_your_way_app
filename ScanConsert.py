@@ -75,15 +75,9 @@ def get_concert_meta(concert_link, meta_format="json"):
     if meta_format not in available_meta_formats:
         return f"{meta_format} is an unknown data format"
 
-    # Set up concert object
-    concert = Concert()
-    concert.set_event_link(concert_link)
+    # Set up a concert object
+    concert = get_concert_object(concert_link)
 
-    # Prepare concert page soup
-    page_request = requests.get(concert_link)
-    page_soup = BeautifulSoup(page_request.text, 'lxml')
-
-    concert.parse_page_soup(page_soup)
     if meta_format == "json":
         return concert.to_json()
     elif meta_format == "xml":
