@@ -15,6 +15,6 @@ from EventClass import Concert, Event
 concert_list = get_concert_list(pages_limit=1)
 first_concert = get_concert_object(concert_link=concert_list[0])
 
-upload_concert(first_concert)
+# upload_concert(first_concert)
 
 print("I'm done")
