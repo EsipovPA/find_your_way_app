@@ -14,6 +14,7 @@ from EventClass import Concert, Event
 # Get concert metadata
 concert_list = get_concert_list(pages_limit=1)
 first_concert = get_concert_object(concert_link=concert_list[0])
+print(f'first_concert = {first_concert.to_json()}')
 
 # upload_concert(first_concert)
 
