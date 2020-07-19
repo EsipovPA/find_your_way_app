@@ -29,14 +29,13 @@ class Event:
 
     """
     def __init__(self):
-        self.name = str("")                     # +
-        self.label = str("")                    # +
-        self.link = str("")                     # +
-        self.location = str("")                 # +
-        self.time = str("")                     # +
-        self.json_data = {}                     # +
-        self.description_tags = []              # -
-        self.description = str("")              # +
+        self.name = str("")                     # Event name
+        self.label = str("")                    # Event label from event web-page
+        self.link = str("")                     # Link to the event web-page
+        self.location = str("")                 # Location of the event
+        self.time = str("")                     # Event time
+        self.json_data = {}                     # Event metadata converted into json format
+        self.description = str("")              # Text description of the event
 
         self.xml_data = Element("metadata")     # TODO: xml metadata output
         self.xml_data.set("version", "1.0")     # TODO: xml metadata output
