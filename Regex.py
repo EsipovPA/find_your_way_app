@@ -33,7 +33,6 @@ def get_std_time_str(time_str):
         pattern = re.compile(date_regex_options[key])
         match_res = pattern.findall(time_str)
         if match_res:
-            print(f'key        = {key}')
             if key is 'today':
                 cur_dt = datetime.datetime.now()
                 return f'{str(cur_dt.year)}-' \

@@ -12,6 +12,7 @@
 import json
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 import xml.dom.minidom as xdm
+from Regex import get_std_time_str
 
 
 def get_meta_string(input_string):
@@ -63,9 +64,7 @@ class Event:
 
         # Get event time
         widget_time = page_soup.select("._2YgOJ")   # fix may be needed
-        # time_str = widget_time[0].findAll("span")[-1].getText()
-        # self.time = get_std_time_str(time_str)
-        self.time = widget_time[0].findAll("span")[-1].getText()
+        self.time = get_std_time_str(widget_time[0].findAll("span")[-1].getText())
 
         # Get event description
         self.description = page_soup.findAll(itemprop="description")[0].getText()

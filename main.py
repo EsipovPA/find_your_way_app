@@ -17,12 +17,7 @@ concert_list = get_concert_list(pages_limit=1)
 # test_concert_meta = get_concert_object(concert_link=concert_list[0])
 # std_time_str = get_std_time_str(test_concert_meta.time)
 
-concert_meta = [get_concert_object(concert_link=link) for link in concert_list]
-for i in range(20):
-    time_str = get_std_time_str(concert_meta[i].time)
-    print(f'source str   = {concert_meta[i].time}')
-    print(f'res time str = {time_str}\n')
-
+# concert_meta = [get_concert_object(concert_link=link) for link in concert_list]
 
 # first_concert = get_concert_object(concert_link=concert_list[0])
 # print(f"concert meta = {first_concert.to_json()}")
