@@ -63,11 +63,12 @@ class Event:
 
         # Get event time
         widget_time = page_soup.select("._2YgOJ")   # fix may be needed
+        # time_str = widget_time[0].findAll("span")[-1].getText()
+        # self.time = get_std_time_str(time_str)
         self.time = widget_time[0].findAll("span")[-1].getText()
 
-        # Get event search tags
+        # Get event description
         self.description = page_soup.findAll(itemprop="description")[0].getText()
-        # self.description_tags = get_description_search_tags(self.description)
 
     def set_event_link(self, link_str):
         """ Set link to event web page
