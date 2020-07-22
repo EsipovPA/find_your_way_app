@@ -5,8 +5,10 @@
 # Distributed under GNU public license
 # email: esipov.p@mail.ru
 # --------------------------------------------------
-import mysql.connector as mysql_c
+from sqlalchemy import create_engine
+import pymysql
 from Config import Config
+import pandas as pd
 
 
 class MySqlConn:
@@ -15,13 +17,20 @@ class MySqlConn:
     """
     __singleton = None
     __is_db_connected = False
-    __connector = None
-    __cursor = None
+    __mysql_engine = None
+    __mysql_conn = None
 
     def __new__(cls, *args, **kwargs):
         if not cls.__singleton:
             cls.__singleton = super(MySqlConn, cls).__new__(cls, *args, **kwargs)
         return cls.__singleton
+
+    def get_server_version(self):
+        mysql_version_info = self.__mysql_conn.execute('SELECT VERSION()')
+        if mysql_version_info.rowcount != 0:
+            print('Successfully connected mysql server:')
+            for row in mysql_version_info:
+                print(f'  mysql version = {row[0]}\n')
 
     def set_db_conn(self):
         """ Sets connection with database using parameters set in the configuration file
@@ -29,14 +38,13 @@ class MySqlConn:
 
         :return: None
         """
-        self.__connector = mysql_c.connect(
-            user=Config().get_database_user(),
-            password=Config().get_database_pass(),
-            host=Config().get_database_address(),
-            database=Config().get_database_name()
-        )
+        self.__mysql_engine = create_engine(f'{Config().get_database_type()}+pymysql://'
+                                            f'{Config().get_database_user()}:{Config().get_database_pass()}@'
+                                            f'{Config().get_database_address()}/{Config().get_database_name()}')
+        self.__mysql_conn = self.__mysql_engine.connect()
 
-        self.__cursor = self.__connector.cursor()
+        # To test connection, output mysql server version
+        self.get_server_version()
         return None
 
     def db_conn_check(self):
@@ -51,3 +59,4 @@ class MySqlConn:
         """
         self.db_conn_check()
         return None
+

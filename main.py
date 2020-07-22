@@ -9,13 +9,16 @@ from ScanConsert import get_concert_list, get_concert_meta, get_concert_object
 from SqliteInterface import upload_concert
 from Config import Config
 from EventClass import Concert, Event
+from MySqlInterface import MySqlConn
+
+
+# Test MySql connection
+MySqlConn().set_db_conn()
 
 
 # Get concert metadata
-concert_list = get_concert_list(pages_limit=1)
-
-concert_meta = [get_concert_object(concert_link=link) for link in concert_list]
-
+# concert_list = get_concert_list(pages_limit=1)
+# concert_meta = [get_concert_object(concert_link=link) for link in concert_list]
 
 # first_concert = get_concert_object(concert_link=concert_list[0])
 # print(f"concert meta = {first_concert.to_json()}")
