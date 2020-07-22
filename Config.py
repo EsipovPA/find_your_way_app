@@ -38,7 +38,31 @@ class Config:
         """ get name of the database, or a database file name if sqlite
         :return: (string) database name
         """
-        return self.config_tree_root.find("./database/db_name").text
+        return self.config_tree_root.find("./database/database_conn/db_name").text
+
+    def get_database_address(self):
+        """ get address of the database hosting server
+        :return: (string) database address
+        """
+        return self.config_tree_root.find("./database/database_conn/db_address").text
+
+    def get_database_user(self):
+        """ get name of database user
+        :return: (string) user name
+        """
+        return self.config_tree_root.find('./database/database_conn/db_user').text
+
+    def get_database_port(self):
+        """ get port number used for interactions with database
+        :return: (string) db port
+        """
+        return self.config_tree_root.find('./database/database_conn/db_port').text
+
+    def get_database_pass(self):
+        """ get password for user defined to interact with database
+        :return: (string) db pass
+        """
+        return self.config_tree_root.find('./database/database_conn/db_pass').text
 
     def get_table_name(self, table_type):
         """ Get name of a database table

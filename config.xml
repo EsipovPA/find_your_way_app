@@ -1,8 +1,14 @@
 <?xml version="1.0"?>
 <configuration>
     <database>
-        <type>sqlite</type>
-        <db_name>fyw_db.db</db_name>
+        <type>mysql</type>
+        <database_conn>
+            <db_name>fyw_db.db</db_name>
+            <db_address>localhost</db_address>
+            <db_user>root</db_user>
+            <db_pass>Pahanm9snecheg</db_pass>
+            <db_port>3306</db_port>
+        </database_conn>
         <tables>
             <item name="artist">
                 <table_name>artist</table_name>
