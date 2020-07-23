@@ -13,6 +13,7 @@ import json
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 import xml.dom.minidom as xdm
 from Regex import get_std_time_str
+import re
 
 
 def get_meta_string(input_string):
@@ -66,7 +67,11 @@ class Event:
         self.time = get_std_time_str(widget_time[0].findAll("span")[-1].getText())
 
         # Get event description
-        self.description = page_soup.findAll(itemprop="description")[0].getText()
+        description_find = page_soup.findAll(itemprop="description")
+        if len(description_find) != 0:
+            self.description = description_find[0].getText()
+        else:
+            self.description = ""
 
     def set_event_link(self, link_str):
         """ Set link to event web page
@@ -87,6 +92,7 @@ class Event:
         self.json_data["location"] = self.location
         self.json_data["time"] = self.time
         self.json_data["description"] = self.description
+
         return json.dumps(self.json_data, ensure_ascii=False)
 
     def to_xml(self):
