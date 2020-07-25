@@ -6,6 +6,7 @@
 # email: esipov.p@mail.ru
 # --------------------------------------------------
 from sqlalchemy import create_engine
+from sqlalchemy import exc
 from sqlalchemy.orm import sessionmaker
 from Config import Config
 import pandas as pd
@@ -72,9 +73,11 @@ class MySqlConn:
         :param concert_meta: (string) json string containing event metadata
         :return: None
         """
-        self.db_conn_check()
-        self.__mysql_conn.execute(f'CALL ConcertInsert(\'{concert_meta}\')')
-        return None
+        try:
+            self.db_conn_check()
+            self.__mysql_conn.execute(f'CALL ConcertInsert(\'{concert_meta}\')')
+        finally:
+            return None
 
     def get_event_tab(self):
         """ Selects the whole t_event table, converts it to a pd.dataframe

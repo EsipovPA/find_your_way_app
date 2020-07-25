@@ -8,12 +8,15 @@
 from ScanConsert import get_concert_list, get_concert_object
 from MySqlInterface import MySqlConn
 
+# Debug special character processing using url: https://www.afisha.ru/concert/2013655/
+# debug_meta = get_concert_object('https://www.afisha.ru/concert/2013655/').to_json()
+# print(f'debug meta = {debug_meta}')
+
+
 # Get concert metadata
 concert_list = get_concert_list()
 
 # Insert all concerts
-# Fail with special characters.
-# Need to find a solution for them
 print(f'concert count = {len(concert_list)}')
 counter = 0
 for link in concert_list:

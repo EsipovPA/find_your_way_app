@@ -86,6 +86,11 @@ class Event:
 
         :return: (string) event metadata in json format
         """
+        self.name = re.sub(r"[^a-zA-Z0-9а-яА-Я\,\.\:]+", ' ', self.name)
+        self.location = re.sub(r"[^a-zA-Z0-9а-яА-Я\,\.\:]+", ' ', self.location)
+        self.description = re.sub(r"[^a-zA-Z0-9а-яА-Я\.\,\:]+", ' ', self.description)
+        self.label = re.sub(r"[^a-zA-Z0-9а-яА-Я\.\,\:]+", ' ', self.label)
+
         self.json_data["name"] = self.name
         self.json_data["label"] = self.label
         self.json_data["link"] = self.link
