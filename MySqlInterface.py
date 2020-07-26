@@ -10,6 +10,7 @@ from sqlalchemy import exc
 from sqlalchemy.orm import sessionmaker
 from Config import Config
 import pandas as pd
+import sys
 
 
 class MySqlConn:
@@ -76,7 +77,11 @@ class MySqlConn:
         try:
             self.db_conn_check()
             self.__mysql_conn.execute(f'CALL ConcertInsert(\'{concert_meta}\')')
+        except:
+            e = sys.exc_info()
+            print(f'sql insertion exception: {e}')
         finally:
+
             return None
 
     def get_event_tab(self):

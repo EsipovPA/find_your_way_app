@@ -81,10 +81,6 @@ def update_artist_data(connection, artist_name, event_id):
                        f"values ({', '.join([new_artist_id(connection), artist_name])})")
         connection.commit()
 
-    # TODO: Update artist - event relation table
-    # cursor.execute(f"select * from {Config().get_table_name('event_artist')} "
-    #                f"where")
-
     connection.commit()
     return None
 

@@ -14,7 +14,7 @@ from MySqlInterface import MySqlConn
 
 
 # Get concert metadata
-concert_list = get_concert_list()
+concert_list = get_concert_list(pages_limit=10)
 
 # Insert all concerts
 print(f'concert count = {len(concert_list)}')
@@ -24,6 +24,7 @@ for link in concert_list:
     c_obj = get_concert_object(concert_link=link)
     MySqlConn().store_concert(concert_meta=c_obj.to_json())
     counter += 1
+
 
 # Insert single concert
 # first_concert = get_concert_object(concert_link=concert_list[0])

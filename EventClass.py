@@ -55,6 +55,11 @@ class Event:
         if len(widget_header) != 0:
             self.name = get_meta_string(widget_header[0].getText())
 
+        if self.name == "":
+            self.name = self.label
+        elif self.label == "":
+            self.label = self.name
+
         # Get event location
         widget_location = page_soup.findAll("div", itemprop="location")
         if len(widget_location) != 0:
@@ -149,7 +154,9 @@ class Concert(Event):
             artist_search = widget_artists[0].select(".object__block-content")
             if len(artist_search) != 0:
                 artist_string = get_meta_string(artist_search[0].getText())
-                self.artists = artist_string.split(', ')
+                self.artists = artist_string.split(',')
+                for i in range(len(self.artists)):
+                    self.artists[i] = self.artists[i].lstrip()
 
     def to_json(self):
         """ Output event metadata in json string
@@ -157,8 +164,8 @@ class Concert(Event):
         :return: (json string) concert metadata
         """
         super().to_json()
-        self.json_data["artists"] = ", ".join(self.artists)
-        self.json_data["genres"] = ", ".join(self.genres)
+        self.json_data["artists"] = self.artists
+        self.json_data["genres"] = self.genres
         return json.dumps(self.json_data, ensure_ascii=False)
 
     def to_string(self):
