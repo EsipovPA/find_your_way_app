@@ -164,8 +164,10 @@ class Concert(Event):
         :return: (json string) concert metadata
         """
         super().to_json()
-        self.json_data["artists"] = self.artists
-        self.json_data["genres"] = self.genres
+        self.json_data["artists"] = ", ".join(self.artists)
+        self.json_data["genres"] = ", ".join(self.genres)
+        # self.json_data["artists"] = self.artists
+        # self.json_data["genres"] = self.genres
         return json.dumps(self.json_data, ensure_ascii=False)
 
     def to_string(self):
