@@ -68,15 +68,32 @@ class MySqlConn:
         if not self.__is_db_connected:
             self.set_db_conn()
 
-    def store_concert(self, concert_meta):
+    def is_event_inserted(self, event_name):
+        """ Checks if event is in event table
+
+        :param event_name: (string) name of the event to check
+        :return: (bool) is event in table
+        """
+        is_found = False
+        try:
+            self.db_conn_check()
+            search_res = self.__mysql_conn.execute(f'SELECT * FROM t_event WHERE name = \'\"{event_name}\"\'')
+            if search_res.rowcount != 0:
+                is_found = True
+        except:
+            e = sys.exc_info()
+            print(f'sql insertion exception: {e}')
+        finally:
+            return is_found
+
+    def store_concert(self, concert_object):
         """ Calls procedure stored in MySql database to save concert description to database
 
-        :param concert_meta: (string) json string containing event metadata
+        :param concert_object: (string) Concert event class object. See EventClass.py
         :return: None
         """
         try:
-            self.db_conn_check()
-            self.__mysql_conn.execute(f'CALL ConcertInsert(\'{concert_meta}\')')
+            self.__mysql_conn.execute(f'CALL StoreConcertInBuff(\'{concert_object.to_json()}\');')
         except:
             e = sys.exc_info()
             print(f'sql insertion exception: {e}')
