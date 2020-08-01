@@ -93,7 +93,18 @@ class MySqlConn:
         :return: None
         """
         try:
-            self.__mysql_conn.execute(f'CALL StoreConcertInBuff(\'{concert_object.to_json()}\');')
+            self.__mysql_conn.execute(f'CALL StoreConcertInBuff'
+                                      f'(\'{concert_object.to_json()}\');')
+        except:
+            e = sys.exc_info()
+            print(f'sql insertion exception: {e}')
+        finally:
+
+            return None
+
+    def db_process_events(self):
+        try:
+            self.__mysql_conn.execute(f'CALL CursorIterator();')
         except:
             e = sys.exc_info()
             print(f'sql insertion exception: {e}')

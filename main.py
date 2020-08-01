@@ -9,14 +9,6 @@ from ScanConsert import get_concert_list, get_concert_object
 from MySqlInterface import MySqlConn
 import time
 
-"""
-debug_obj = get_concert_object('https://www.afisha.ru/concert/2012335/')
-debug_obj.to_json()
-print(debug_obj.name)
-MySqlConn().is_event_inserted(debug_obj.name)
-MySqlConn().store_concert(debug_obj.to_json())
-MySqlConn().is_event_inserted(debug_obj.name)
-"""
 
 # Get concert metadata
 concert_list = get_concert_list()
@@ -30,6 +22,5 @@ for link in concert_list:
     print(f'{counter} -> {c_obj.link}')
     MySqlConn().store_concert(concert_object=c_obj)
     counter += 1
-
 
 print("I'm done")
